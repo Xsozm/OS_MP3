@@ -67,13 +67,22 @@ public class Wheel extends Thread {
 		return capacity==count_of_currently_on_board_players;
 	}
 	
-	public void run(){  
+	@SuppressWarnings("static-access")
+	public void run(){ 
+		while(true) {
 		try {
-			Wheel.sleep(maximum_waiting_time);
+			this.sleep(maximum_waiting_time);
 		} catch (InterruptedException e) {
 			run_ride();
 			end_ride();
 			e.printStackTrace();
+			continue;
+		}
+		boolean f = false;
+		if(!IsFull())f=true;
+		run_ride();
+		end_ride();
+		if(f)break;
 		}
 	}  
 }
