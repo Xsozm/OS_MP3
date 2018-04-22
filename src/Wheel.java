@@ -37,18 +37,25 @@ public class Wheel extends Thread {
 	}
 
 	public void load_players(Player p) {
+		
 		list_of_currently_on_board_player.add(p);
-		p.setOn_board(true);
-		this.setCount_of_currently_on_board_players(this.getCount_of_currently_on_board_players()+1);
+		if(IsFull() && this.getState() ==Thread.State.TIMED_WAITING ) {
+			this.interrupt();
+		}
 	}
 	
-	public void run_ride() throws InterruptedException {
-		
+	public void run_ride()  {
+		for(Player p :this.list_of_currently_on_board_player) {
+			p.setRide_complete(false);
+			p.setOn_board(true);
+			this.setCount_of_currently_on_board_players(this.getCount_of_currently_on_board_players()+1);
+
+		}
 		
 
 	}
 	
-	public void end_ride() throws InterruptedException {
+	public void end_ride()  {
 		count_of_currently_on_board_players=0;
 		for(Player p :this.list_of_currently_on_board_player) {
 			p.setRide_complete(true);
@@ -61,6 +68,12 @@ public class Wheel extends Thread {
 	}
 	
 	public void run(){  
-		
+		try {
+			Wheel.sleep(maximum_waiting_time);
+		} catch (InterruptedException e) {
+			run_ride();
+			end_ride();
+			e.printStackTrace();
+		}
 	}  
 }
