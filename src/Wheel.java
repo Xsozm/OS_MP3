@@ -1,14 +1,24 @@
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.lang.Thread.State;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Wheel extends Thread {
 	int capacity = 5;
 	int count_of_currently_on_board_players;
-	ArrayList<Player> list_of_currently_on_board_player;
+	List<Player> list_of_currently_on_board_player= new  ArrayList<Player>();
 	int maximum_waiting_time ;
 	public Wheel(int x) {
 		this.maximum_waiting_time=x;
+		
+		
 	}
 	
+	
+
 	
 
 	public int getCount_of_currently_on_board_players() {
@@ -19,7 +29,7 @@ public class Wheel extends Thread {
 		this.count_of_currently_on_board_players = count_of_currently_on_board_players;
 	}
 
-	public ArrayList<Player> getList_of_currently_on_board_player() {
+	public List<Player> getList_of_currently_on_board_player() {
 		return list_of_currently_on_board_player;
 	}
 
@@ -36,26 +46,23 @@ public class Wheel extends Thread {
 		this.maximum_waiting_time = maximum_waiting_time;
 	}
 
-	public void load_players(Player p) {
+	public  void load_players(Player p) {
 		
 		list_of_currently_on_board_player.add(p);
+		System.out.println(list_of_currently_on_board_player.size());
+		p.setOn_board(true);
+		this.setCount_of_currently_on_board_players(this.getCount_of_currently_on_board_players()+1);
 		if(IsFull() && this.getState() ==Thread.State.TIMED_WAITING ) {
 			this.interrupt();
 		}
 	}
 	
 	public void run_ride()  {
-		for(Player p :this.list_of_currently_on_board_player) {
-			p.setRide_complete(false);
-			p.setOn_board(true);
-			this.setCount_of_currently_on_board_players(this.getCount_of_currently_on_board_players()+1);
-
-		}
 		
 
 	}
 	
-	public void end_ride()  {
+	public  void end_ride()  {
 		count_of_currently_on_board_players=0;
 		for(Player p :this.list_of_currently_on_board_player) {
 			p.setRide_complete(true);
@@ -63,26 +70,37 @@ public class Wheel extends Thread {
 		}
 		list_of_currently_on_board_player.clear();
 	}
-	public boolean IsFull() {
-		return capacity==count_of_currently_on_board_players;
+	public boolean  IsFull() {
+		return capacity==list_of_currently_on_board_player.size();
+	}
+	State state(){
+		return this.getState();
 	}
 	
-	@SuppressWarnings("static-access")
+	
 	public void run(){ 
+		
 		while(true) {
-		try {
-			this.sleep(maximum_waiting_time);
-		} catch (InterruptedException e) {
-			run_ride();
-			end_ride();
-			e.printStackTrace();
-			continue;
-		}
-		boolean f = false;
-		if(!IsFull())f=true;
-		run_ride();
-		end_ride();
-		if(f)break;
+			
+		System.out.println("runnn");
+		
+			try {
+				Thread.sleep(maximum_waiting_time);
+				run_ride();
+				end_ride();
+				System.out.println("H");
+			
+				
+			} catch (InterruptedException e) {
+				run_ride();
+				end_ride();
+				//e.printStackTrace();
+				System.out.println("Interrupted !");
+			}
+		
+			
+		
+		
 		}
 	}  
 }

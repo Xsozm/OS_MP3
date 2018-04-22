@@ -5,7 +5,6 @@ public class Player extends Thread {
 	public int waiting_time;
 	public boolean on_board=false;
 	public boolean ride_complete=false;
-	Wheel wh ;
 	
 	public Player(int id , int time) {
 		ID=id;
@@ -45,6 +44,11 @@ public class Player extends Thread {
 	public void setRide_complete(boolean ride_complete) {
 		this.ride_complete = ride_complete;
 	}
+	
+	State state(){
+		return this.getState();
+	}
+	
 
 	@SuppressWarnings("static-access")
 	public void run(){
@@ -52,9 +56,11 @@ public class Player extends Thread {
 			this.sleep(waiting_time);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//System.out.println("Inte");
+			//e.printStackTrace();
 		}
-		wh.load_players(this);
+	//	wh.load_players(this);
+		//System.out.println(this.getState());
 		
 
 	}  

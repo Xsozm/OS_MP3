@@ -24,7 +24,7 @@ public class test extends Thread {
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			System.out.println("III");
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 }
