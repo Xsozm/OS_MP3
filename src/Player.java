@@ -1,3 +1,4 @@
+import java.io.PrintWriter;
 
 public class Player extends Thread implements Comparable {
 	
@@ -6,6 +7,8 @@ public class Player extends Thread implements Comparable {
 	public boolean on_board=false;
 	public boolean ride_complete=false;
 	Wheel wh ;
+	PrintWriter out;
+
 	
 	public Player(int id , int time) {
 		ID=id;
@@ -55,21 +58,21 @@ public class Player extends Thread implements Comparable {
 	public void run(){
 		try {
 			this.sleep(waiting_time);
-			System.out.println("player wakes up: "+(getID()));
+			out.println("player wakes up: "+(getID())+"\n");
 			wh.load_players(this);
 
 
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			//System.out.println("Inte");
-			//e.printStackTrace();
+			
 		}
 		
-		//System.out.println(this.getState());
 		
 
 	}
-
+		
+	public String toString() {
+		return getID()+"";
+	}
 
 	@Override
 	public int compareTo(Object o) {

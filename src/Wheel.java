@@ -2,6 +2,7 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.io.PrintWriter;
 import java.lang.Thread.State;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,17 +10,16 @@ import java.util.Collections;
 public class Wheel extends Thread {
 	int capacity = 5;
 	int count_of_currently_on_board_players;
-	List<Player> list_of_currently_on_board_player= Collections.synchronizedList((new  ArrayList<Player>()));
-	int maximum_waiting_time ;
-	public Wheel(int x) {
-		this.maximum_waiting_time=x;
-		
-		
-	}
-	
-	
+	List<Player> list_of_currently_on_board_player = Collections.synchronizedList((new ArrayList<Player>()));
+	int maximum_waiting_time;
+	int count;
+	PrintWriter out;
 
-	
+	public Wheel(int x) {
+
+		this.maximum_waiting_time = x;
+
+	}
 
 	public int getCount_of_currently_on_board_players() {
 		return count_of_currently_on_board_players;
@@ -40,73 +40,70 @@ public class Wheel extends Thread {
 	public int getMaximum_waiting_time() {
 		return maximum_waiting_time;
 	}
-	
 
 	public void setMaximum_waiting_time(int maximum_waiting_time) {
 		this.maximum_waiting_time = maximum_waiting_time;
 	}
 
 	public synchronized void load_players(Player p) {
-				System.out.println("passing player: "+(p.getID())+" to the operator\n" + 
-				"Player " +(p.getID())+" on board, capacity: "+(list_of_currently_on_board_player.size()+1));
+		out.println("passing player: " + (p.getID()) + " to the operator\n\n" + "Player " + (p.getID())
+				+ " on board, capacity: " + (list_of_currently_on_board_player.size() + 1) + "\n");
 		list_of_currently_on_board_player.add(p);
-		//System.out.println(list_of_currently_on_board_player.size());
+		// out.println(list_of_currently_on_board_player.size());
 		p.setOn_board(true);
-		this.setCount_of_currently_on_board_players(this.getCount_of_currently_on_board_players()+1);
-		if(IsFull() && this.getState() ==Thread.State.TIMED_WAITING ) {
+		count--;
+		this.setCount_of_currently_on_board_players(this.getCount_of_currently_on_board_players() + 1);
+		if (IsFull() && this.getState() == Thread.State.TIMED_WAITING) {
 			this.interrupt();
 		}
 	}
-	
-	public void run_ride()  {
-		
+
+	public void run_ride() {
 
 	}
-	
-	public  void end_ride()  {
-		count_of_currently_on_board_players=0;
-		for(Player p :this.list_of_currently_on_board_player) {
+
+	public void end_ride() {
+		count_of_currently_on_board_players = 0;
+		for (Player p : this.list_of_currently_on_board_player) {
 			p.setRide_complete(true);
 			p.setOn_board(false);
 		}
 		list_of_currently_on_board_player.clear();
 	}
-	public boolean  IsFull() {
-		return capacity==list_of_currently_on_board_player.size();
+
+	public boolean IsFull() {
+		return capacity == list_of_currently_on_board_player.size();
 	}
-	State state(){
+
+	State state() {
 		return this.getState();
 	}
-	
-	
-	public void run(){ 
-		
-		while(true) {
-			
-	    System.out.println("wheel start sleep");
+
+	public void run() {
+
+		while (count > 0) {
+
+			out.println("wheel start sleep\n");
 
 			try {
 				Thread.sleep(maximum_waiting_time);
-				System.out.println("Wheel end sleep");
-				System.out.println("Wheel is full, Let's go for a ride ");
+				out.println("Wheel end sleep\n");
+				out.println("Wheel is full, Let's go for a ride\n");
 				run_ride();
 				end_ride();
-			
-				
+
 			} catch (InterruptedException e) {
-				System.out.println("Wheel is full, Let's go for a ride \n Threads in this ride are:"); 
-				for(int i=0;i<this.list_of_currently_on_board_player.size();i++)
-					System.out.print(this.list_of_currently_on_board_player.get(i).getID()+" ");
-				System.out.println();
+				out.println("Wheel is full, Let's go for a ride \n\nThreads in this ride are:\n");
+				for (int i = 0; i < this.list_of_currently_on_board_player.size(); i++)
+					out.print(this.list_of_currently_on_board_player.get(i).getID() + " ");
+				out.println("\n");
 				run_ride();
 				end_ride();
-				//e.printStackTrace();
-				//System.out.println("Interrupted !");
+				// e.printStackTrace();
+				// out.println("Interrupted !");
 			}
-		
-			
-		
-		
+
 		}
-	}  
+		out.flush();
+	}
 }
