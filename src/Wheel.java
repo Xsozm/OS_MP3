@@ -47,9 +47,10 @@ public class Wheel extends Thread {
 	}
 
 	public  void load_players(Player p) {
-		
+				System.out.println("passing player: "+(p.getID()-1)+" to the operator\n" + 
+				"Player " +(p.getID()-1)+" on board, capacity: "+(list_of_currently_on_board_player.size()+1));
 		list_of_currently_on_board_player.add(p);
-		System.out.println(list_of_currently_on_board_player.size());
+		//System.out.println(list_of_currently_on_board_player.size());
 		p.setOn_board(true);
 		this.setCount_of_currently_on_board_players(this.getCount_of_currently_on_board_players()+1);
 		if(IsFull() && this.getState() ==Thread.State.TIMED_WAITING ) {
@@ -82,20 +83,25 @@ public class Wheel extends Thread {
 		
 		while(true) {
 			
-		System.out.println("runnn");
-		
+	    System.out.println("wheel start sleep");
+
 			try {
 				Thread.sleep(maximum_waiting_time);
 				run_ride();
 				end_ride();
-				System.out.println("H");
+				System.out.println("wheel end sleep");
 			
 				
 			} catch (InterruptedException e) {
+				System.out.println("Wheel is full, Let's go for a ride"); 
+				System.out.println("Threads in this ride are:");
+				for(int i=0;i<this.list_of_currently_on_board_player.size();i++)
+					System.out.print(this.list_of_currently_on_board_player.get(i).getID()-1+" ");
+				System.out.println();
 				run_ride();
 				end_ride();
 				//e.printStackTrace();
-				System.out.println("Interrupted !");
+				//System.out.println("Interrupted !");
 			}
 		
 			

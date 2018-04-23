@@ -36,6 +36,7 @@ public class Operator {
 	    while(f){
 	    	for(int i=0;i<P.length;i++) {
 	    		if(P[i].state()==Thread.State.TERMINATED && P[i].isRide_complete()==false && !vis[i]) {
+
 	    			wh.load_players(P[i]);
 	    			vis[i]=true;
 	    		}
@@ -52,7 +53,6 @@ public class Operator {
 	    	
 
 	    }
-	    System.out.println("hh");
 	    
 	    
 	    

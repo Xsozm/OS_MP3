@@ -54,11 +54,14 @@ public class Player extends Thread {
 	public void run(){
 		try {
 			this.sleep(waiting_time);
+			System.out.println("player wakes up: "+(getID()-1));
+
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			//System.out.println("Inte");
 			//e.printStackTrace();
 		}
+		
 	//	wh.load_players(this);
 		//System.out.println(this.getState());
 		
