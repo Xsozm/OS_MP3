@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -11,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Operator {
 	public static void main(String[] args) throws InterruptedException {
-		FastScanner sc = new FastScanner("input-1.txt");
+		FastScanner sc = new FastScanner("input-2.txt");
 	    PrintWriter out = new PrintWriter(System.out);
 	    int max_wait_time = sc.nextInt();
 	    int n =sc.nextInt();
@@ -26,13 +27,19 @@ public class Operator {
 
 	    	P[i]=new Player(x, y);
 	    	
+	    	
+	    	
 	    }
+	    Arrays.sort(P);
 	    Wheel wh = new Wheel(max_wait_time);
-	    for(Player p :P)
-	    	p.start();
 	    wh.start();
+	    for(Player p :P) {
+	    	p.wh=wh;
+	    	p.start();
+	    }
 	   
-	    boolean f= true;
+	   
+	   /* boolean f= true;
 	    while(f){
 	    	for(int i=0;i<P.length;i++) {
 	    		if(P[i].state()==Thread.State.TERMINATED && P[i].isRide_complete()==false && !vis[i]) {
@@ -52,7 +59,7 @@ public class Operator {
 	    	}
 	    	
 
-	    }
+	    }*/
 	    
 	    
 	    

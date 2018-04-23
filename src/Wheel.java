@@ -9,7 +9,7 @@ import java.util.Collections;
 public class Wheel extends Thread {
 	int capacity = 5;
 	int count_of_currently_on_board_players;
-	List<Player> list_of_currently_on_board_player= new  ArrayList<Player>();
+	List<Player> list_of_currently_on_board_player= Collections.synchronizedList((new  ArrayList<Player>()));
 	int maximum_waiting_time ;
 	public Wheel(int x) {
 		this.maximum_waiting_time=x;
@@ -46,9 +46,9 @@ public class Wheel extends Thread {
 		this.maximum_waiting_time = maximum_waiting_time;
 	}
 
-	public  void load_players(Player p) {
-				System.out.println("passing player: "+(p.getID()-1)+" to the operator\n" + 
-				"Player " +(p.getID()-1)+" on board, capacity: "+(list_of_currently_on_board_player.size()+1));
+	public synchronized void load_players(Player p) {
+				System.out.println("passing player: "+(p.getID())+" to the operator\n" + 
+				"Player " +(p.getID())+" on board, capacity: "+(list_of_currently_on_board_player.size()+1));
 		list_of_currently_on_board_player.add(p);
 		//System.out.println(list_of_currently_on_board_player.size());
 		p.setOn_board(true);
@@ -87,16 +87,16 @@ public class Wheel extends Thread {
 
 			try {
 				Thread.sleep(maximum_waiting_time);
+				System.out.println("Wheel end sleep");
+				System.out.println("Wheel is full, Let's go for a ride ");
 				run_ride();
 				end_ride();
-				System.out.println("wheel end sleep");
 			
 				
 			} catch (InterruptedException e) {
-				System.out.println("Wheel is full, Let's go for a ride"); 
-				System.out.println("Threads in this ride are:");
+				System.out.println("Wheel is full, Let's go for a ride \n Threads in this ride are:"); 
 				for(int i=0;i<this.list_of_currently_on_board_player.size();i++)
-					System.out.print(this.list_of_currently_on_board_player.get(i).getID()-1+" ");
+					System.out.print(this.list_of_currently_on_board_player.get(i).getID()+" ");
 				System.out.println();
 				run_ride();
 				end_ride();

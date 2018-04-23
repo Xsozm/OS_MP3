@@ -1,10 +1,11 @@
 
-public class Player extends Thread {
+public class Player extends Thread implements Comparable {
 	
 	public int ID;
 	public int waiting_time;
 	public boolean on_board=false;
 	public boolean ride_complete=false;
+	Wheel wh ;
 	
 	public Player(int id , int time) {
 		ID=id;
@@ -54,7 +55,9 @@ public class Player extends Thread {
 	public void run(){
 		try {
 			this.sleep(waiting_time);
-			System.out.println("player wakes up: "+(getID()-1));
+			System.out.println("player wakes up: "+(getID()));
+			wh.load_players(this);
+
 
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
@@ -62,10 +65,15 @@ public class Player extends Thread {
 			//e.printStackTrace();
 		}
 		
-	//	wh.load_players(this);
 		//System.out.println(this.getState());
 		
 
+	}
+
+
+	@Override
+	public int compareTo(Object o) {
+		return this.waiting_time-((Player)o).waiting_time;
 	}  
 
 }
