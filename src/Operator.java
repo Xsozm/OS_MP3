@@ -10,41 +10,30 @@ import java.util.StringTokenizer;
 public class Operator {
 	public static void main(String[] args) throws InterruptedException, FileNotFoundException {
 		FastScanner sc = new FastScanner("input-2.txt");
-		PrintWriter out = new PrintWriter("ouroutput-1.txt");
-		
+		PrintWriter out = new PrintWriter("ouroutput-2.txt");
+		StringBuilder sb = new StringBuilder();
 		int max_wait_time = sc.nextInt();
 		int n = sc.nextInt();
 		Player[] P = new Player[n];
-		int k = 0;
 		for (int i = 0; i < n; i++) {
-			k++;
 			String str = sc.nextToken();
 			int x = Integer.parseInt(str.split(",")[0]);
 			int y = Integer.parseInt(str.split(",")[1]);
 
 			P[i] = new Player(x, y);
-			P[i].out=out;
-
+			P[i].out = out;
+			P[i].sb = sb;
 		}
-		Arrays.sort(P);
-		for (Player p : P) {
-			System.out.println(p);
-		}
+//		Arrays.sort(P);
 		Wheel wh = new Wheel(max_wait_time);
-		wh.count=n;
-		wh.out=out;
+		wh.count = n;
+		wh.out = out;
+		wh.sb = sb;
 		wh.start();
 		for (Player p : P) {
 			p.wh = wh;
 			p.start();
 		}
-		boolean done=true;
-		while(!done) {
-			for (Player p : P) {
-				done = done && p.ride_complete;
-			}
-		}
-		
 
 	}
 

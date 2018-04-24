@@ -2,6 +2,7 @@ import java.io.PrintWriter;
 
 public class Player extends Thread implements Comparable {
 	
+	public static StringBuilder sb;
 	public int ID;
 	public int waiting_time;
 	public boolean on_board=false;
@@ -55,12 +56,12 @@ public class Player extends Thread implements Comparable {
 	
 
 	@SuppressWarnings("static-access")
-	public void run(){
+	public synchronized void run(){
 		try {
 			this.sleep(waiting_time);
-			out.println("player wakes up: "+(getID())+"\n");
+			sb.append("player wakes up: "+(getID())+"\n");
 			wh.load_players(this);
-
+			
 
 		} catch (InterruptedException e) {
 			
